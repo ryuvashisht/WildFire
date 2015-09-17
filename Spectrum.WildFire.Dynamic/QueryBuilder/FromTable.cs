@@ -43,47 +43,49 @@ namespace Spectrum.WildFire.Dynamic
             this.InitialTable.Add(tableAlias, tableName);
         }
 
-      
-        public void JoinOn(string tableName, string tableAlias, string column1,string column2, JoinType JoinType)
+
+        public void JoinOn(string tableName, string tableAlias, string column1, string column2, JoinType JoinType)
         {
 
-            if(!String.IsNullOrEmpty(tableName) || !String.IsNullOrEmpty(tableAlias) || !String.IsNullOrEmpty(column1)| !String.IsNullOrEmpty(column2) ){
+            if (!String.IsNullOrEmpty(tableName) || !String.IsNullOrEmpty(tableAlias) || !String.IsNullOrEmpty(column1) | !String.IsNullOrEmpty(column2))
+            {
                 this.Tables.Add(tableAlias, tableName);
                 switch (JoinType)
-            {
-                case JoinType.Inner:
-                    if (Tables.Count == 0)
-                    {
-                        TableString += String.Format(" [{1}] {0} ", InitialTable.First().Key, InitialTable.First().Value);
-                    }
-                    else
-                    {
-                        TableString += String.Format(" [{1}] {0} ", InitialTable.First().Key, InitialTable.First().Value);
-                        var initialTableAlias = InitialTable.First().Key;
-                        foreach(var table in Tables){
-                            var table2Alias = table.Key;
-                            var expression = String.Format(" {0}.[{1}] = {2}.[{3}]", initialTableAlias, column1, table2Alias, column2);
-                            TableString += String.Format(" inner join [{0}] {1} on {2} ",table.Value,table.Key,expression);
+                {
+                    case JoinType.Inner:
+                        if (Tables.Count == 0)
+                        {
+                            TableString += String.Format(" [{1}] {0} ", InitialTable.First().Key, InitialTable.First().Value);
                         }
-                    }
-                    break;
-                case JoinType.Outer:
-                     if (Tables.Count == 0)
-                    {
-                        TableString += InitialTable.First().Value;
-                    }
-                    else
-                    {
-                        var initialTableAlias = InitialTable.First().Key;
-                        foreach(var table in Tables){
-                            var table2Alias = table.Key;
-                            var expression = String.Format(" {0}.[{1}] = {2}.[{3}]", initialTableAlias, column1, table2Alias, column2);
-                            TableString += String.Format(" outer join [{0}] on {1} ",table.Value,expression);
+                        else
+                        {
+                            TableString += String.Format(" [{1}] {0} ", InitialTable.First().Key, InitialTable.First().Value);
+                            var initialTableAlias = InitialTable.First().Key;
+                            foreach (var table in Tables)
+                            {
+                                var table2Alias = table.Key;
+                                var expression = String.Format(" {0}.[{1}] = {2}.[{3}]", initialTableAlias, column1, table2Alias, column2);
+                                TableString += String.Format(" inner join [{0}] {1} on {2} ", table.Value, table.Key, expression);
+                            }
                         }
-                    }
-                    break;
-                    
-            }
+                        break;
+                    case JoinType.Outer:
+                        if (Tables.Count == 0)
+                        {
+                            TableString += InitialTable.First().Value;
+                        }
+                        else
+                        {
+                            var initialTableAlias = InitialTable.First().Key;
+                            foreach (var table in Tables)
+                            {
+                                var table2Alias = table.Key;
+                                var expression = String.Format(" {0}.[{1}] = {2}.[{3}]", initialTableAlias, column1, table2Alias, column2);
+                                TableString += String.Format(" outer join [{0}] on {1} ", table.Value, expression);
+                            }
+                        }
+                        break;
+                }
             }
         }
 

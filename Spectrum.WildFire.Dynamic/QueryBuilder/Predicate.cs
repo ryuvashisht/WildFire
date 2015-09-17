@@ -29,7 +29,5 @@ namespace Spectrum.WildFire.Dynamic
         {
             this.Expression = String.Format(" AND {0}", expression);
         }
-
-        
     }
 }

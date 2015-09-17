@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace Spectrum.WildFire.Dynamic
 {
-   public enum OperationType
+    public enum OperationType
     {
         Or,
         And,
         Not,
         Like,
-        Equals
+        Equals,
+        Null,
+        Empty
     }
 }

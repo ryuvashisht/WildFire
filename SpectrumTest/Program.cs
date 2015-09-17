@@ -20,7 +20,6 @@ namespace SpectrumTest
             table.JoinOn("Table2", "t2", "Column1", "Column2", JoinType.Inner);
 
             //add table
-
             queryBuilder.AddFromTable(table.TableString);
 
             //Create Where clauses using predicates query builder provides you methods to add predicate
@@ -31,7 +30,6 @@ namespace SpectrumTest
             //add predicate  and specify the operation type supports and or and not
             queryBuilder.AddPredicate(textMatchExpression, OperationType.And);
 
-
             var datesExpressions1 = new List<string>();
             datesExpressions1.Add("f.[Column5] >= '2015-09-01'");//
             datesExpressions1.Add("f.[Column6] <= '2015-12-31'");
@@ -41,11 +39,10 @@ namespace SpectrumTest
             dateExpressions2.Add("f.[Column8] >= '2015-12-31'");
 
             //add groups of predicates
-            queryBuilder.AddPredicate(datesExpressions1, OperationType.And);
-            queryBuilder.AddPredicate(dateExpressions2, OperationType.Or);
+            queryBuilder.AddPredicate(datesExpressions1, OperationType.And,OperationType.Or);
+            queryBuilder.AddPredicate(dateExpressions2, OperationType.And, OperationType.Empty);
 
             queryBuilder.GenerateQuery();
-
 
         }
     }

@@ -34,7 +34,7 @@ namespace Spectrum.WildFire.Dynamic
         }
         private List<string> _SelectItems;
 
-        private List<string> FromItems
+        private List<string> FromTables
         {
             get
             {
@@ -47,6 +47,10 @@ namespace Spectrum.WildFire.Dynamic
         }
         private List<string> _FromItems;
 
+        /// <summary>
+        /// Adds predicate using a string without the operation type.
+        /// </summary>
+        /// <param name="expression"></param>
         public void AddPredicate(string expression)
         {
             var predicate = new Predicate(expression);
@@ -57,18 +61,24 @@ namespace Spectrum.WildFire.Dynamic
         /// Adds the predicate object to list with Or and And methods.
         /// </summary>
         /// <param name="expression">Of Predicate object type</param>
-        public void AddPredicate(Predicate predicate,OperationType operationType)
+        public void AddPredicate(Predicate predicate, OperationType operationType)
         {
             predicate.OperationType = operationType;
             Predicates.Add(predicate);
         }
 
-        public void AddPredicate(List<string> predicates,OperationType operationType)
+        /// <summary>
+        /// Adds list of predicates which are list of strings.
+        /// </summary>
+        /// <param name="predicates"></param>
+        /// <param name="operationType"></param>
+        public void AddPredicate(List<string> predicates, OperationType innerOperation,OperationType operationType)
         {
 
             var expression = "(";
             var operation = "";
-            switch(operationType){
+            switch (innerOperation)
+            {
                 case OperationType.Or:
                     operation = " OR ";
                     break;
@@ -83,7 +93,7 @@ namespace Spectrum.WildFire.Dynamic
             if (predicates.Count > 1)
             {
                 expression += predicates[0];
-                for(var i=1;i<predicates.Count; i++)
+                for (var i = 1; i < predicates.Count; i++)
                 {
                     expression += operation + predicates[i];
                 }
@@ -92,7 +102,7 @@ namespace Spectrum.WildFire.Dynamic
             {
                 expression += predicates[0];
             }
-           
+
             expression += ")";
             var predicate = new Predicate(expression);
             predicate.OperationType = operationType;
@@ -100,7 +110,7 @@ namespace Spectrum.WildFire.Dynamic
         }
         public void AddFromTable(string fromTable)
         {
-            FromItems.Add(fromTable);
+            FromTables.Add(fromTable);
         }
 
         public void AddSelectColumn(string selectColumn)
@@ -108,7 +118,7 @@ namespace Spectrum.WildFire.Dynamic
             SelectItems.Add(selectColumn);
         }
 
-      
+
 
         public string Query { get; set; }
 
@@ -117,20 +127,22 @@ namespace Spectrum.WildFire.Dynamic
         /// </summary>
         /// <param name="orderBy"></param>
         /// <param name="order"></param>
-       public void OrderBy(string orderBy,bool order){
-           if (order)
-           {
-               Query += String.Format(" ORDERBY BY {0} ASC", orderBy);
-           }
-           else
-           {
-               Query += String.Format(" ORDERBY BY {0} DESC", orderBy);
-           }
-           
+        public void OrderBy(string orderBy, bool order)
+        {
+            if (order)
+            {
+                Query += String.Format(" ORDERBY BY {0} ASC", orderBy);
+            }
+            else
+            {
+                Query += String.Format(" ORDERBY BY {0} DESC", orderBy);
+            }
+
         }
 
-        public void FetchNext(string numberOfRows){
-            Query += String.Format(" FETCH NEXT {0} ROWS ONLY",numberOfRows);
+        public void FetchNext(string numberOfRows)
+        {
+            Query += String.Format(" FETCH NEXT {0} ROWS ONLY", numberOfRows);
         }
 
         public void GenerateQuery()
@@ -147,8 +159,8 @@ namespace Spectrum.WildFire.Dynamic
                 }
                 else
                 {
-                    where += operation + Predicates[0].Expression;
-                    for(var i=1; i<Predicates.Count; i++)
+                    where += Predicates[0].Expression + " "+ Predicates[0].OperationType.ToString();
+                    for (var i = 1; i < Predicates.Count; i++)
                     {
                         switch (Predicates[i].OperationType)
                         {
@@ -161,18 +173,21 @@ namespace Spectrum.WildFire.Dynamic
                             case OperationType.Not:
                                 operation = " NOT ";
                                 break;
+                            case OperationType.Empty:
+                                operation = "";
+                                break;
 
                         }
-                        where += operation + Predicates[i].Expression;
+                        where += Predicates[i].Expression + " " + operation;
                     }
                 }
-                if (FromItems.Count == 0)
+                if (FromTables.Count == 0)
                 {
                     throw new Exception("You are missing tables which you want to select from.");
                 }
                 else
                 {
-                    foreach (var item in FromItems)
+                    foreach (var item in FromTables)
                     {
                         from += item;
                     }
@@ -183,19 +198,21 @@ namespace Spectrum.WildFire.Dynamic
                 }
                 else
                 {
-                    foreach(var item in SelectItems){
+                    foreach (var item in SelectItems)
+                    {
                         select += item;
                     }
-                   
+
                 }
 
                 Query = String.Format("SELECT {0} FROM {1} WHERE {2} ;", select, from, where);
-                
-            }
-            catch(Exception ex){
 
             }
-           
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debugger.Log(0, null, ex.ToString());
+            }
+
         }
     }
 }
