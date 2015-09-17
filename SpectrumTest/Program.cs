@@ -38,7 +38,7 @@ namespace SpectrumTest
 
             var dateExpressions2 = new List<string>();
             dateExpressions2.Add("f.[Column7] >= '2015-10-01'");
-            dateExpressions2.Add("f.[COlumn8] >= '2015-12-31'");
+            dateExpressions2.Add("f.[Column8] >= '2015-12-31'");
 
             //add groups of predicates
             queryBuilder.AddPredicate(datesExpressions1, OperationType.And);
