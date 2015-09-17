@@ -1,6 +1,11 @@
 # WildFire
 A .Net Library for reusable code for data access from database , collections, and other utility classes.
 
+To install in visual studio use package manager
+
+PM> Install-Package WildFire
+Or download from github and run the solution file.
+
  var queryBuilder = new QueryBuilder();
 
             //Add table from there you want to select.
@@ -33,3 +38,4 @@ A .Net Library for reusable code for data access from database , collections, an
             queryBuilder.AddPredicate(dateExpressions2, OperationType.And, OperationType.Empty);
 
             queryBuilder.GenerateQuery();
+            
