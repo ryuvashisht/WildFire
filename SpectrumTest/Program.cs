@@ -14,10 +14,10 @@ namespace SpectrumTest
             var queryBuilder = new QueryBuilder();
 
             //Add table from there you want to select.
-            var table = new FromTable("Fact_Sales", "f");
+            var table = new FromTable("Table1", "t1");
 
             // Perform a join 
-            table.JoinOn("DimensionMembers", "d0", "Currency_Id", "DimensionMemberId", JoinType.Inner);
+            table.JoinOn("Table2", "t2", "Column1", "Column2", JoinType.Inner);
 
             //add table
 
@@ -25,24 +25,24 @@ namespace SpectrumTest
 
             //Create Where clauses using predicates query builder provides you methods to add predicate
             //there are two ways you can add predicate  either by string or predicate object
-            var cancellationTermExpression = new Predicate("f.[CancellationTerms] like @search");
+            var textMatchExpression = new Predicate("t1.[Column3] like 'Joe'");
 
             //AddPredicate also takes just string if you have only one where condition.
             //add predicate  and specify the operation type supports and or and not
-            queryBuilder.AddPredicate(cancellationTermExpression, OperationType.And);
+            queryBuilder.AddPredicate(textMatchExpression, OperationType.And);
 
 
-            var bookingDates = new List<string>();
-            bookingDates.Add("f.[BookingDate] >= '2015-09-01'");//
-            bookingDates.Add("f.[BookingDate] <= '2015-12-31'");
+            var datesExpressions1 = new List<string>();
+            datesExpressions1.Add("f.[Column5] >= '2015-09-01'");//
+            datesExpressions1.Add("f.[Column6] <= '2015-12-31'");
 
-            var cancellationDates = new List<string>();
-            cancellationDates.Add("f.[CollectionDate] >= '2015-10-01'");
-            cancellationDates.Add("f.[CollectionDate] >= '2015-12-31'");
+            var dateExpressions2 = new List<string>();
+            dateExpressions2.Add("f.[Column7] >= '2015-10-01'");
+            dateExpressions2.Add("f.[COlumn8] >= '2015-12-31'");
 
             //add groups of predicates
-            queryBuilder.AddPredicate(bookingDates, OperationType.And);
-            queryBuilder.AddPredicate(cancellationDates, OperationType.Or);
+            queryBuilder.AddPredicate(datesExpressions1, OperationType.And);
+            queryBuilder.AddPredicate(dateExpressions2, OperationType.Or);
 
             queryBuilder.GenerateQuery();
 
