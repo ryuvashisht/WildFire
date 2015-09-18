@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spectrum.WildFire.Dynamic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace Spectrum.WildFire.Dynamic
 {
     public class QueryBuilder
     {
+       
         private List<Predicate> Predicates
         {
             get
@@ -120,46 +122,31 @@ namespace Spectrum.WildFire.Dynamic
 
 
 
-        public string Query { get; set; }
-
-        /// <summary>
-        /// order ASC or DESC
-        /// </summary>
-        /// <param name="orderBy"></param>
-        /// <param name="order"></param>
-        public void OrderBy(string orderBy, bool order)
+        public Query Query
         {
-            if (order)
-            {
-                Query += String.Format(" ORDERBY BY {0} ASC", orderBy);
+            
+            get{
+                if (_Query == null)
+                {
+                    _Query = new Query();
+                }
+                return _Query;
             }
-            else
-            {
-                Query += String.Format(" ORDERBY BY {0} DESC", orderBy);
-            }
-
         }
-
-        public void FetchNext(string numberOfRows)
-        {
-            Query += String.Format(" FETCH NEXT {0} ROWS ONLY", numberOfRows);
-        }
-
+        private Query _Query;
         public void GenerateQuery()
         {
-            var select = "";
-            var from = "";
-            var where = "";
+           
             try
             {
                 var operation = "";
                 if (Predicates.Count == 1)
                 {
-                    where += Predicates[0].Expression;
+                    this.Query.Where += Predicates[0].Expression;
                 }
                 else
                 {
-                    where += Predicates[0].Expression + " "+ Predicates[0].OperationType.ToString();
+                    this.Query.Where += Predicates[0].Expression + " " + Predicates[0].OperationType.ToString();
                     for (var i = 1; i < Predicates.Count; i++)
                     {
                         switch (Predicates[i].OperationType)
@@ -178,7 +165,7 @@ namespace Spectrum.WildFire.Dynamic
                                 break;
 
                         }
-                        where += Predicates[i].Expression + " " + operation;
+                        this.Query.Where += Predicates[i].Expression + " " + operation;
                     }
                 }
                 if (FromTables.Count == 0)
@@ -189,28 +176,32 @@ namespace Spectrum.WildFire.Dynamic
                 {
                     foreach (var item in FromTables)
                     {
-                        from += item;
+                        this.Query.From += item;
                     }
                 }
                 if (SelectItems.Count == 0)
                 {
-                    select = " * ";
+                     this.Query.Select = " * ";
                 }
                 else
                 {
                     foreach (var item in SelectItems)
                     {
-                        select += item;
+                         this.Query.Select += item;
                     }
 
                 }
+                if (!String.IsNullOrEmpty(this.Query.QueryString))
+                {
 
-                Query = String.Format("SELECT {0} FROM {1} WHERE {2} ;", select, from, where);
+                }
 
+                this.Query.QueryString = String.Format("SELECT {0} FROM {1} WHERE {2} {3} {4};", this.Query.Select, this.Query.From, this.Query.Where,this.Query.Order, this.Query.Fetch);
+         
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debugger.Log(0, null, ex.ToString());
+                throw new NullReferenceException(ex.ToString());
             }
 
         }
