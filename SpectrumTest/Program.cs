@@ -18,7 +18,7 @@ namespace SpectrumTest
 
             //// Perform a join 
             table.JoinOn("Table2", "t2", "Column1", "Column2", JoinType.Inner);
-
+            table.JoinOn("Table3", "t3", "Column2", "Column3", JoinType.Inner);
             ////add table
             queryBuilder.AddFromTable(table.TableString);
 

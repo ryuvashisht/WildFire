@@ -59,7 +59,10 @@ namespace Spectrum.WildFire.Dynamic
                         }
                         else
                         {
-                            TableString += String.Format(" [{1}] {0} ", InitialTable.First().Key, InitialTable.First().Value);
+                            if (String.IsNullOrEmpty(TableString))
+                            {
+                                TableString += String.Format(" [{1}] {0} ", InitialTable.First().Key, InitialTable.First().Value);
+                            }
                             var initialTableAlias = InitialTable.First().Key;
                             foreach (var table in Tables)
                             {
