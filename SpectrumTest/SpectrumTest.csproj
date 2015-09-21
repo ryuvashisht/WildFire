@@ -48,6 +48,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Spectrum.WildFire.Common\Spectrum.WildFire.Common.csproj">
+      <Project>{f457b0c8-2bf3-49b8-9a39-25df52a44a02}</Project>
+      <Name>Spectrum.WildFire.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Spectrum.WildFire.Dynamic\Spectrum.WildFire.Dynamic.csproj">
       <Project>{2b7fa4d1-3dbd-4cab-9334-010817499e5d}</Project>
       <Name>Spectrum.WildFire.Dynamic</Name>

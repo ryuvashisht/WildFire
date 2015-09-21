@@ -13,15 +13,62 @@ namespace SpectrumTest
         {
             var queryBuilder = new QueryBuilder();
 
-            ////Add table from there you want to select.
-            var table = new FromTable("Table1", "t1");
-
+           
+            var t0 = new Table()
+            {
+                TableName = "Table0",
+                TableAlias = "t0"
+            };
             //// Perform a join 
-            table.JoinOn("Table2", "t2", "Column1", "Column2", JoinType.Inner);
-            table.JoinOn("Table3", "t3", "Column2", "Column3", JoinType.Inner);
-            ////add table
-            queryBuilder.AddFromTable(table.TableString);
 
+            var t1 = new Table()
+            {
+                TableName = "Table2",
+                Column1Name = "Column1",
+                Column2Name = "Column2",
+                JoinType = JoinType.Inner,
+                TableAlias = "t2"
+            };
+            var t2 = new Table()
+            {
+                TableName = "Table1",
+                Column1Name = "Column1",
+                Column2Name = "Column2",
+                JoinType = JoinType.Inner,
+                TableAlias = "t1"
+            };
+            var t3 = new Table()
+            {
+                TableName = "Table3",
+                Column1Name = "Column1",
+                Column2Name = "Column2",
+                JoinType = JoinType.Inner,
+                TableAlias = "t3"
+            };
+            var t4 = new Table()
+            {
+                TableName = "Table4",
+                Column1Name = "Column1",
+                Column2Name = "Column2",
+                JoinType = JoinType.Inner,
+                TableAlias = "t4"
+            };
+
+            ////Create table from first table
+
+            //var tables = new List<Table>();
+
+            //tables.Add(t1);
+            //tables.Add(t3);
+            //tables.Add(t2);
+            //tables.Add(t4);
+
+            //////add table
+            //t0.JoinOn(tables);
+
+           
+
+            queryBuilder.AddTable(t0);
             ////Create Where clauses using predicates query builder provides you methods to add predicate
             ////there are two ways you can add predicate  either by string or predicate object
             var textMatchExpression = new Predicate("t1.[Column3] like 'Joe'");

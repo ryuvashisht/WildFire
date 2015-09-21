@@ -9,7 +9,7 @@ namespace Spectrum.WildFire.Dynamic
 {
     public class QueryBuilder
     {
-       
+        public string TableString { get; set; }
         private List<Predicate> Predicates
         {
             get
@@ -114,6 +114,15 @@ namespace Spectrum.WildFire.Dynamic
         {
             FromTables.Add(fromTable);
         }
+        public void AddFromTable(Table fromTable)
+        {
+            FromTables.Add(String.Format("{0} {1}",fromTable.TableName,fromTable.TableAlias));
+        }
+
+        public void AddTable(Table table)
+        {
+            this.Table = table; 
+        }
 
         public void AddSelectColumn(string selectColumn)
         {
@@ -136,7 +145,7 @@ namespace Spectrum.WildFire.Dynamic
         private Query _Query;
         public void GenerateQuery()
         {
-           
+            GenerateJoins();
             try
             {
                 var operation = "";
@@ -205,5 +214,53 @@ namespace Spectrum.WildFire.Dynamic
             }
 
         }
+        public void GenerateJoins()
+        {
+            TableString = "";
+            if (!String.IsNullOrEmpty(this.Table.TableName) || !String.IsNullOrEmpty(this.Table.TableAlias) || !String.IsNullOrEmpty(this.Table.Column1Name) | !String.IsNullOrEmpty(this.Table.Column2Name))
+            {
+                switch (this.Table.JoinType)
+                {
+                    case JoinType.Inner:
+                        if (this.Table.Tables.Count == 0)
+                        {
+                            TableString += String.Format(" [{1}] {0} ", this.Table.TableAlias, this.Table.TableName);
+                        }
+                        else
+                        {
+                            if (String.IsNullOrEmpty(TableString))
+                            {
+                                TableString += String.Format(" [{1}] {0} ", this.Table.TableAlias, this.Table.TableName);
+                            }
+                            var initialTableAlias = this.Table.TableAlias;
+                            foreach (var t in this.Table.Tables)
+                            {
+                                var table2Alias = t.TableAlias;
+                                var expression = String.Format(" {0}.[{1}] = {2}.[{3}]", initialTableAlias, t.Column1Name, table2Alias, t.Column2Name);
+                                TableString += String.Format(" inner join [{0}] {1} on {2} ", t.TableName, t.TableAlias, expression);
+                            }
+                        }
+                        break;
+                    case JoinType.Outer:
+                        if (this.Table.Tables.Count == 0)
+                        {
+                            TableString += this.Table.TableName;
+                        }
+                        else
+                        {
+                            var initialTableAlias = this.Table.TableAlias;
+                            foreach (var t in this.Table.Tables)
+                            {
+                                var table2Alias = t.TableAlias;
+                                var expression = String.Format(" {0}.[{1}] = {2}.[{3}]", initialTableAlias, t.Column1Name, table2Alias, t.Column2Name);
+                                TableString += String.Format(" outer join [{0}] on {1} ", t.TableName, expression);
+                            }
+                        }
+                        break;
+                }
+               }
+            this.AddFromTable(TableString);
+        }
+        public Table Table { get; set; }
     }
 }

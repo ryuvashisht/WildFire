@@ -46,6 +46,7 @@
     <Compile Include="QueryBuilder\Predicate.cs" />
     <Compile Include="QueryBuilder\Query.cs" />
     <Compile Include="QueryBuilder\QueryBuilder.cs" />
+    <Compile Include="QueryBuilder\Table.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spectrum.WildFire.Common\Spectrum.WildFire.Common.csproj">
