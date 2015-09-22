@@ -10,6 +10,8 @@ namespace Spectrum.WildFire.Dynamic
     public class QueryBuilder
     {
         public string TableString { get; set; }
+
+        public Table Table { get; set; }
         private List<Predicate> Predicates
         {
             get
@@ -226,9 +228,7 @@ namespace Spectrum.WildFire.Dynamic
                         {
                             this.Query.Select += ", ";
                         }
-                        
                     }
-
                 }
                 if (!String.IsNullOrEmpty(this.Query.QueryString))
                 {
@@ -295,6 +295,18 @@ namespace Spectrum.WildFire.Dynamic
                }
             this.AddFromTable(TableString);
         }
-        public Table Table { get; set; }
+
+        public void GenerateCountQuery()
+        {
+                if (Predicates.Count == 0)
+                {
+                    this.Query.CountQueryString = String.Format("SELECT Count(*) FROM {0} {1};",this.Query.From, this.Query.Order);
+                }
+                else
+                {
+                    this.Query.CountQueryString = String.Format("SELECT Count(*) FROM {0} WHERE {1} {2};", this.Query.From, this.Query.Where, this.Query.Order);
+                }
+            }
+        
     }
 }

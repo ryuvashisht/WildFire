@@ -58,7 +58,7 @@ namespace SpectrumTest
             //Fetch overloaded with offset and number of rows.
             queryBuilder.Query.FetchNext("2", "20");
             queryBuilder.GenerateQuery();
-
+            queryBuilder.GenerateCountQuery();
         }
     }
 }

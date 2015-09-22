@@ -10,6 +10,8 @@ namespace Spectrum.WildFire.Dynamic
     {
         public string QueryString { get; set; }
 
+        public string CountQueryString { get; set; }
+
         public string Select { get; set; }
 
         public string From { get; set; }
