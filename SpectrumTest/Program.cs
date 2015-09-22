@@ -30,6 +30,9 @@ namespace SpectrumTest
             //tables.Add(t1);
             //// Perform a join
             //t0.JoinOn(tables);
+            //Add columns which you want to add.
+            queryBuilder.AddSelectColumn("column1");
+            queryBuilder.AddSelectColumn("column2");
             queryBuilder.AddTable(t0);
             ////Create Where clauses using predicates query builder provides you methods to add predicate
             ////there are two ways you can add predicate  either by string or predicate object
@@ -47,9 +50,9 @@ namespace SpectrumTest
             queryBuilder.AddPredicate(datesExpressions1, OperationType.And, OperationType.Or);
             queryBuilder.AddPredicate(dateExpressions2, OperationType.And, OperationType.Empty);
             //Order by 
-            queryBuilder.Query.OrderBy("Column1", true);
+            queryBuilder.Query.OrderBy("Column1", OrderByType.ASC);
             //Fetch overloaded with offset and number of rows.
-            queryBuilder.Query.FetchNext("2","20");
+            queryBuilder.Query.FetchNext("2", "20");
             queryBuilder.GenerateQuery();
 
         }

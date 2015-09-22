@@ -28,9 +28,9 @@ namespace Spectrum.WildFire.Dynamic
         /// </summary>
         /// <param name="orderBy"></param>
         /// <param name="order"></param>
-        public void OrderBy(string orderBy, bool order)
+        public void OrderBy(string orderBy, OrderByType orderbyType)
         {
-            if (order)
+            if (orderbyType.HasFlag(OrderByType.ASC))
             {
                 this.Order += String.Format(" ORDER BY {0} ASC", orderBy);
             }

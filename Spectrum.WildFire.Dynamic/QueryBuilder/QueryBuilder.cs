@@ -146,12 +146,18 @@ namespace Spectrum.WildFire.Dynamic
         public void GenerateQuery()
         {
             GenerateJoins();
+           
             try
             {
                 var operation = "";
-                if (Predicates.Count == 1)
+                if (Predicates.Count == 0)
+                {
+                  
+                }
+                else if (Predicates.Count == 1)
                 {
                     this.Query.Where += Predicates[0].Expression;
+                   
                 }
                 else
                 {
@@ -185,7 +191,7 @@ namespace Spectrum.WildFire.Dynamic
                 {
                     foreach (var item in FromTables)
                     {
-                        this.Query.From += item;
+                        this.Query.From += item ;
                     }
                 }
                 if (SelectItems.Count == 0)
@@ -194,9 +200,17 @@ namespace Spectrum.WildFire.Dynamic
                 }
                 else
                 {
+                    var count = 0;
                     foreach (var item in SelectItems)
                     {
-                         this.Query.Select += item;
+                        count++;
+                        var ItemsCount = SelectItems.Count;
+                        this.Query.Select += item;
+                        if (count < ItemsCount)
+                        {
+                            this.Query.Select += ", ";
+                        }
+                        
                     }
 
                 }
@@ -205,8 +219,12 @@ namespace Spectrum.WildFire.Dynamic
 
                 }
 
+                if (Predicates.Count == 0)
+                {
+                this.Query.QueryString = String.Format("SELECT {0} FROM {1} {2} {3};", this.Query.Select, this.Query.From, this.Query.Order, this.Query.Fetch);
+                }else{
                 this.Query.QueryString = String.Format("SELECT {0} FROM {1} WHERE {2} {3} {4};", this.Query.Select, this.Query.From, this.Query.Where,this.Query.Order, this.Query.Fetch);
-         
+                }
             }
             catch (Exception ex)
             {
