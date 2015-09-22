@@ -161,26 +161,42 @@ namespace Spectrum.WildFire.Dynamic
                 }
                 else
                 {
-                    this.Query.Where += Predicates[0].Expression + " " + Predicates[0].OperationType.ToString();
+                    this.Query.Where += Predicates[0].Expression + " " + Predicates[0].OperationType.ToString() + " ";
+                    var count = 0;
                     for (var i = 1; i < Predicates.Count; i++)
                     {
-                        switch (Predicates[i].OperationType)
+                        count++;
+                        var lastObject = Predicates.LastOrDefault();
+                        if (count < Predicates.Count)
                         {
-                            case OperationType.Or:
-                                operation = " OR ";
-                                break;
-                            case OperationType.And:
-                                operation = " AND ";
-                                break;
-                            case OperationType.Not:
-                                operation = " NOT ";
-                                break;
-                            case OperationType.Empty:
-                                operation = "";
-                                break;
+                            switch (Predicates[i].OperationType)
+                            {
+                                case OperationType.Or:
+                                    operation = " OR ";
+                                    break;
+                                case OperationType.And:
+                                    operation = " AND ";
+                                    break;
+                                case OperationType.Not:
+                                    operation = " NOT ";
+                                    break;
+                                case OperationType.Empty:
+                                    operation = "";
+                                    break;
 
+                            }
+                            if (Predicates[i].Equals(lastObject))
+                            {
+                                this.Query.Where += Predicates[i].Expression + " " ;
+
+                            }
+                            else
+                            {
+                                this.Query.Where += Predicates[i].Expression + " " + operation;
+
+                            }
                         }
-                        this.Query.Where += Predicates[i].Expression + " " + operation;
+                      
                     }
                 }
                 if (FromTables.Count == 0)

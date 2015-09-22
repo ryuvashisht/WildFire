@@ -46,9 +46,13 @@ namespace SpectrumTest
             var dateExpressions2 = new List<string>();
             dateExpressions2.Add("f.[Column7] >= '2015-10-01'");
             dateExpressions2.Add("f.[Column8] >= '2015-12-31'");
+
+            var textMatchExpression2 = new Predicate("t1.[Column3] like 'Joe'");
+          
             //add groups of predicates
             queryBuilder.AddPredicate(datesExpressions1, OperationType.And, OperationType.Or);
-            queryBuilder.AddPredicate(dateExpressions2, OperationType.And, OperationType.Empty);
+            queryBuilder.AddPredicate(dateExpressions2, OperationType.And, OperationType.Or);
+            queryBuilder.AddPredicate(textMatchExpression2, OperationType.And);
             //Order by 
             queryBuilder.Query.OrderBy("Column1", OrderByType.ASC);
             //Fetch overloaded with offset and number of rows.
